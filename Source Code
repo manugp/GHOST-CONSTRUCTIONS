@@ -1,0 +1,1331 @@
+#include<iostream.h>
+#include<fstream.h>
+#include<dos.h>
+#include<conio.h>
+#include<graphics.h>
+#include<string.h>
+#include<stdio.h>
+#include<ctype.h>
+#include<process.h>
+
+#define ENTER 13
+#define ESC 27
+#define BACKSPACE 8
+#define ARROW_UP 72
+#define ARROW_DOWN 80
+#define ARROW_RIGHT 77
+#define ARROW_LEFT 75
+#define COLOUR_1 RED
+#define COLOUR_2 GREEN
+#define COLOUR_3 BLUE
+#define COLOUR_4 CYAN
+#define COLOUR_5 YELLOW
+#define COLOUR_6 BROWN
+
+int maxx,maxy;
+fstream file;
+ifstream ifile,filei;
+ofstream ofile;
+int option,options,size,searchselect,flag,cflag,searchy,searchx,nocheck,i,j,k,gd,gm;
+char dsearch[10],dcheck[10];
+int load=0;int loadcount=0;int overloaded=0;
+char filename[30],l1[10],l2[10];
+
+struct dates
+{
+ int day,month,year;
+};
+
+void getdates(dates sbuy)
+{
+ cout<<"Enter the day: ";
+ cin>>sbuy.day;
+ cout<<"Enter the month: ";
+ cin>>sbuy.month;
+ cout<<"Enter the year: ";
+ cin>>sbuy.year;
+}
+
+void putdates(dates sbuy)
+{
+ cout<<sbuy.day<<'/'<<sbuy.month<<'/'<<sbuy.year;
+};
+
+struct coordinate
+{
+ int x;int y;
+};
+
+
+struct address
+{
+  char line[100],place[20],hname[25],locality[30],city[20],district[20];
+  unsigned long int PIN;
+};
+
+
+class product
+{
+ private:
+	 char cname[40];
+	 int stock;
+	 float price;
+ public:
+       int pno;
+       char name[40];
+       void get();
+       void put();
+       void modify();
+       void switcher(char l1[10]);
+};
+
+class clog
+{
+ private:
+	 char sname[40];
+	 float cost;
+	 dates sbuy;
+ public:
+	void get();
+	void put();
+}newlog;
+
+class project
+{
+ private:
+	 char cname[30],phone[15];
+	 address paddr,cddr;
+	 float cost,paid;
+ public:
+	int status;
+	char name[25];
+	int pcode;
+	project()
+	{
+	 status=0;
+	}
+	void get();
+	void put();
+	void modify();
+	void switcher(char l1[10]);
+};
+
+class worker
+{
+ private:
+	 int workno;
+	 address addr;
+	 char phoneno[25];
+	 int age,exp,voterid;
+ public:
+       char name[25];
+       int getworker()
+       {
+	return workno;
+       }
+       void get();
+       void modify();
+       void put();
+       void switcher(char l1[10]);
+    };
+
+void worker::switcher(char l1[10])
+{
+ strncpy(l1,name,10);
+}
+
+void product::switcher(char l1[10])
+{
+ strncpy(l1,name,10);
+}
+
+void project::switcher(char l1[20])
+{
+ strncpy(l1,name,10);
+}
+
+void worker::get()
+{
+ cout<<"\nEnter the worker no : ";
+ cin>>workno;
+ cout<<"\nEnter The name  : ";
+ gets(name);
+ cout<<"\nEnter address : ";
+ cout<<"\n enter house name : " ;
+ gets(addr.hname);
+ cout<<"\nEnter locality : ";
+ gets(addr.locality);
+ cout<<"\nEnter dist : ";
+ gets(addr.district);
+ cout<<"\nEnter phone no : ";
+ gets(phoneno);
+ cout<<"\nEnter the age : ";
+ cin>>age;
+ cout<<" \nEnter the voter id no : ";
+ cin>>voterid;
+ cout<<"\nEnter years of experience : ";
+ cin>>exp;
+}
+
+void worker::put()
+{
+ cout<<"\nWorker no : "<<workno;
+ cout<<"\nName : ";
+ puts(name);
+ cout<<"\nAddress : ";
+ puts(addr.hname);
+ puts(addr.locality);
+ puts(addr.district);
+ cout<<"\nPhone no : ";
+ puts(phoneno);
+ cout<<"\nAge : "<<age;
+ cout<<"\nVoter id : "<<voterid;
+ cout<<"\nExperience : "<<exp;
+}
+
+void worker::modify()
+{
+ cout<<"\nEnter the new datas: " ;
+ cout<<"\nEnter the worker no : ";
+ cin>>workno;
+ cout<<"\nEnter The name  : ";
+ gets(name);
+ cout<<"\nEnter address : ";
+ cout<<"\n enter house name : " ;
+ gets(addr.hname);
+ cout<<"\nEnter locality : ";
+ gets(addr.locality);
+ cout<<"\nEnter dist : ";
+ gets(addr.district);
+ cout<<"\nEnter phone no : ";
+ gets(phoneno);
+ cout<<"\nEnter the age : ";
+ cin>>age;
+ cout<<" \nEnter the voter id no : ";
+ cin>>voterid;
+ cout<<"\nEnter years of experience : ";
+ cin>>exp;
+}
+
+void project::get()
+{
+ cout<<"\n\n\t Enter project details:";
+ cout<<"\n\t Enter project name:";
+ gets(name);
+ cout<<"\n\t Enter the project code:";
+ cin>>pcode;
+ cout<<"\n\t Enter project address:";
+ cout<<"\n\t Enter line:";
+ gets(paddr.line);
+ cout<<"\n\t Enter place:";
+ gets(paddr.place);
+ cout<<"\n\t Enter locality:";
+ gets(paddr.locality);
+ cout<<"\n\t Enter district:";
+ gets(paddr.district);
+ cout<<"\n\t Enter the estimated cost:";
+ cin>>cost;
+ cout<<"\n\t Enter the amount paid:";
+ cin>>paid;
+ cout<<"\n\t Enter costumer details:";
+ cout<<"\n\t Enter costumer name:";
+ gets(cname);
+ cout<<"\n\t Enter house name:";
+ gets(cddr.hname);
+ cout<<"\n\t Enter line:";
+ gets(cddr.line);
+ cout<<"\n\t Enter place:";
+ gets(cddr.place);
+ cout<<"\n\t Enter locality:";
+ gets(cddr.locality);
+ cout<<"\n\t Enter city:";
+ gets(cddr.city);
+ cout<<"\n\t Enter phone number:";
+ gets(phone);
+ cout<<"\n\t Enter pin code:";
+ cin>>cddr.PIN;
+ cout<<"\n\n\tPRESS ANY KEY TO CONTINUE......";
+ getch();
+}
+
+void project::put()
+{
+ cout<<"\t\tProject details:";
+ cout<<"\t Project name:";
+ puts(name);
+ cout<<"\t Project code:";
+ cout<<pcode;
+ cout<<"\t Project address:";
+ cout<<"\t Line:";
+ puts(paddr.line);
+ cout<<"\t Place:";
+ puts(paddr.place);
+ cout<<"\t Locality:";
+ puts(paddr.locality);
+ cout<<"\t District:";
+ puts(paddr.district);
+ cout<<"\t Estimated cost:";
+ cout<<cost;
+ cout<<"\t Amount paid:";
+ cout<<paid;
+ cout<<"\t Costumer details:";
+ cout<<"\t Costumer name:";
+ puts(cname);
+ cout<<"\t House name:";
+ puts(cddr.hname);
+ cout<<"\t Line:";
+ puts(cddr.line);
+ cout<<"\t Place:";
+ puts(cddr.place);
+ cout<<"\t Locality:";
+ puts(cddr.locality);
+ cout<<"\t City:";
+ puts(cddr.city);
+ cout<<"\tPhone number:";
+ puts(phone);
+ cout<<"\t Pin code:";
+ cout<<cddr.PIN;
+ cout<<"\t\tEnter status:";
+ cout<<status;
+}
+
+
+void project:: modify()
+{
+ clrscr();
+ put();
+ getch();
+ clrscr();
+ cout<<"\tEnter Project name: ";
+ gets(name);
+ cout<<"\tEnter Project code: ";
+ cin>>pcode;
+ cout<<"\t\tADDRESS";
+ cout<<"\tEnter line:";
+ gets(paddr.line);
+ cout<<"\tEnter place:";
+ gets(paddr.place);
+ cout<<"\tEnter locality:";
+ gets(paddr.locality);
+ cout<<"\tEnter city";
+ gets(paddr.city);
+ cout<<"\tEnter district:";
+ gets(paddr.district);
+ cout<<"\tEnter pin:";
+ cin>>cddr.PIN;
+ cout<<"\tEnter costumer name:";
+ gets(cname);
+ cout<<"\tEnter estimated cost:";
+ cin>>cost;
+ cout<<"\tEnter the amount paid:";
+ cin>>paid;
+ cout<<"\tEnter the status:";
+ cin>>status;
+ delay(1000);
+}
+
+void clog::get()
+{
+ cout<<"Service provided: ";
+ gets(sname);
+ cout<<"Cost: ";
+ cin>>cost;
+ getdates(sbuy);
+}
+
+void clog::put()
+{
+ puts(sname);
+ cout<<cost;
+ putdates(sbuy);
+}
+
+void product::get()
+{
+ cout<<"Enter the Product name: ";
+ gets(name);
+ cout<<"Enter the Product code: ";
+ cin>>pno;
+ cout<<"Enter the Company name: ";
+ gets(cname);
+ cout<<"Enter the price of Product: ";
+ cin>>price;
+ cout<<"Enter the stocked quantity of Product: ";
+  cin>>stock;
+}
+
+void product::put()
+{
+ cout<<"Product name: ";
+ puts(name);
+ cout<<"Product code: "<<pno;
+ cout<<"Company name: ";
+ puts(cname);
+ cout<<"Cost: "<<price;
+ cout<<"Stock: "<<stock;
+}
+
+void product::modify()
+{
+ cout<<"Product name:";
+ gets(name);
+ cout<<"Product code:";
+ cin>>pno;
+ cout<<"Company name:";
+ gets(cname);
+ cout<<"Cost:";
+ cin>>price;
+ cout<<"Stock:";
+ cin>>stock;
+}
+
+int menu2(char l1[20],char l2[20])
+{
+ int sl1,sl2;
+ sl1=strlen(l1)/2;
+ sl2=strlen(l2)/2;
+ detectgraph(&gd,&gm);
+ initgraph(&gd,&gm,"");
+ setcolor(getmaxcolor());
+ rectangle(0,0,maxx,maxy/2);
+ rectangle(0,maxy/2,maxx,maxy);
+ setfillstyle(1,COLOUR_1);floodfill(maxx/4,maxy/4,getmaxcolor());
+ setfillstyle(1,COLOUR_2);floodfill(maxx/4,(maxy*3)/4,getmaxcolor());
+ outtextxy(maxx/2-sl1,maxy/4,l1);
+ outtextxy(maxx/2-sl2,(maxy*3)/4,l2);
+ i=0;
+ while(1)
+ {
+  option=getch();
+  setcolor(getmaxcolor());
+  rectangle(0,0,maxx,maxy/2);
+  rectangle(0,maxy/2,maxx,maxy);
+  if(i==0)
+  {
+   setcolor(COLOUR_1);
+   rectangle(0,0,maxx,maxy/2);
+  }
+  else
+  {
+   setcolor(COLOUR_2);
+   rectangle(0,maxy/2,maxx,maxy);
+  }
+  if(option==ENTER)
+   break;
+  if(option==ESC)
+   return 3;
+  if(option==ARROW_UP)
+   --i;
+  else if(option==ARROW_DOWN)
+   ++i;
+  else
+   continue;
+  if(i==2)
+   --i;
+  if(i==-1)
+   ++i;
+ }
+  cleardevice();
+  closegraph();
+  clrscr();
+  return(i+1);
+}
+
+
+void menu6()
+{
+ detectgraph(&gd,&gm);
+ initgraph(&gd,&gm,"D:\\GHOST");
+ setlinestyle(0,2,3);
+ settextstyle(3,0,2);
+ maxx=getmaxx();
+ maxy=getmaxy();
+ setcolor(WHITE);
+ rectangle(0,0,maxx,maxy);
+ rectangle(0,0,maxx/3,maxy/3);
+ rectangle(maxx/3,0,(maxx/3)*2,maxy/3);
+ rectangle((maxx/3)*2,0,maxx,maxy/3);
+ rectangle(0,maxy/3,maxx/3,(maxy/3)*2);
+ rectangle(maxx/3,maxy/3,(maxx/3)*2,(maxy/3)*2);
+ rectangle((maxx/3)*2,maxy/3,maxx,(maxy/3)*2);
+ rectangle(0,(maxy/3)*2,maxx,maxy);
+ setfillstyle(1,COLOUR_1);
+ floodfill(maxx/6,maxy/6,WHITE );
+ setfillstyle(1,COLOUR_2);
+ floodfill(maxx/2,maxy/6,WHITE);
+ setfillstyle(1,COLOUR_3);
+ floodfill((maxx/6)*5,maxy/6,WHITE);
+ setfillstyle(1,COLOUR_4);
+ floodfill(maxx/6,maxy/2,WHITE);
+ setfillstyle(1,COLOUR_5);
+ floodfill(maxx/2,maxy/2,WHITE);
+ setfillstyle(1,COLOUR_6);
+ floodfill((maxx/6)*5,maxy/2,WHITE);
+ outtextxy(maxx/3,(maxy/6)*5,"SEARCH:");
+}
+
+int menu4(char l1[20],char l2[20],char l3[20],char l4[20])
+{
+ int sl1,sl2,sl3,sl4;
+ sl1=(strlen(l1)/2)*3;
+ sl2=(strlen(l2)/2)*3;
+ sl3=(strlen(l3)/2)*3;
+ sl4=(strlen(l4)/2)*3;
+ detectgraph(&gd,&gm);
+ initgraph(&gd,&gm,"D:\\GHOST");
+ maxx=getmaxx();maxy=getmaxy();
+ setlinestyle(0,2,3);
+ settextstyle(3,0,2);
+ setcolor(getmaxcolor());
+ rectangle(0, 0, maxx, maxy);
+ rectangle(0,maxy,maxx/2,maxy/2);
+ rectangle(0,0,maxx/2,maxy/2);
+ rectangle(maxx/2,0,maxx,maxy/2);
+ rectangle(maxx/2,maxy/2,maxx,maxy);
+ setfillstyle(1,COLOUR_1);
+ floodfill(maxx/4,maxy/4,getmaxcolor());
+ setfillstyle(1,COLOUR_2);
+ floodfill((maxx*3)/4,maxy/4,getmaxcolor());
+ setfillstyle(1,COLOUR_3);
+ floodfill(maxx/4,(maxy*3)/4,getmaxcolor());
+ setfillstyle(1,COLOUR_4);
+ floodfill((maxx*3)/4,(maxy*3)/4,getmaxcolor());
+ outtextxy(1*((maxx/4)-sl1),maxy/4,l1);
+ outtextxy(1*(((maxx*3)/4)-sl2),maxy/4,l2);
+ outtextxy(1*((maxx/4)-sl3),(maxy*3)/4,l3);
+ outtextxy(1*(((maxx*3)/4)-sl4),(maxy*3)/4,l4);
+ int i=0,j=0;
+ while(1)
+ {
+  option=int(getch());
+  if(option==ENTER)
+   break;
+  if(option==ESC)
+   return 5;
+  setcolor(getmaxcolor());
+  rectangle(0, 0, maxx, maxy);
+  rectangle(0,maxy,maxx/2,maxy/2);
+  rectangle(0,0,maxx/2,maxy/2);
+  rectangle(maxx/2,0,maxx,maxy/2);
+  rectangle(maxx/2,maxy/2,maxx,maxy);
+  if(i==0)
+   if(j==0)
+   {
+    setcolor(COLOUR_1);
+    rectangle(0,0,maxx/2,maxy/2);
+   }
+   else
+   {
+    setcolor(COLOUR_3);
+    rectangle(0,maxy,maxx/2,maxy/2);
+   }
+  else
+   if(j==0)
+   {
+    setcolor(COLOUR_2);
+    rectangle(maxx/2,0,maxx,maxy/2);
+   }
+   else
+   {
+    setcolor(COLOUR_4);
+    rectangle(maxx/2,maxy/2,maxx,maxy);
+   }
+  if(option==ARROW_UP)
+   --i;
+  else if(option==ARROW_DOWN)
+   ++i;
+  else if(option==ARROW_RIGHT)
+   ++j;
+  else if(option==ARROW_LEFT)
+   --j;
+  else
+   continue;
+
+  if(i==2)
+   --i;
+  if(i==-1)
+   ++i;
+  if(j==-1)
+   ++j;
+  if(j==2)
+   --j;
+ }
+ cleardevice();
+ closegraph();
+ clrscr();
+ return((i+1)+(j*2));
+}
+
+void menu6(int i,int j)
+{
+ setcolor(WHITE);
+ rectangle(0,0,maxx,maxy);
+ rectangle(0,0,maxx/3,maxy/3);
+ rectangle(maxx/3,0,(maxx/3)*2,maxy/3);
+ rectangle((maxx/3)*2,0,maxx,maxy/3);
+ rectangle(0,maxy/3,maxx/3,(maxy/3)*2);
+ rectangle(maxx/3,maxy/3,(maxx/3)*2,(maxy/3)*2);
+ rectangle((maxx/3)*2,maxy/3,maxx,(maxy/3)*2);
+ rectangle(0,(maxy/3)*2,maxx,maxy);
+
+ if(i==0)
+  if(j==0)
+  {
+   setcolor(COLOUR_1);
+   rectangle(0,0,maxx/3,maxy/3);
+  }
+  else if(j==1)
+  {
+   setcolor(COLOUR_2);
+   rectangle(maxx/3,0,(maxx/3)*2,maxy/3);
+  }
+  else
+  {
+   setcolor(COLOUR_3);
+   rectangle((maxx/3)*2,0,maxx,maxy/3);
+  }
+ else
+  if(j==0)
+  {
+   setcolor(COLOUR_4);
+   rectangle(0,maxy/3,maxx/3,(maxy/3)*2);
+  }
+  else if(j==1)
+  {
+   setcolor(COLOUR_5);
+   rectangle(maxx/3,maxy/3,(maxx/3)*2,(maxy/3)*2);
+  }
+  else
+  {
+   setcolor(COLOUR_6);
+   rectangle((maxx/3)*2,maxy/3,maxx,(maxy/3)*2);
+  }
+}
+
+
+int insert(char newp[20],char insp[20])
+{
+ if (nocheck==1)
+  return 0;
+ flag=0,cflag=0;
+ for(i=0;i<strlen(newp);i++)
+ {
+  if(tolower(newp[i])==tolower(insp[i]))
+   ++flag;
+  else
+   break;
+ }
+ if(cflag>flag)
+ {
+  flag=cflag;
+   return 0;
+ }
+ else
+  if(flag!=0)
+   return 1;
+
+
+if(flag==0)
+ if((int(tolower(newp[0]))-int(tolower(insp[0])))<0)
+  return 1;
+
+return 0;
+}
+
+
+int Dynamicsearch(char l1[10])
+{
+ if(loadcount==0)
+ {
+  i=j=0;
+  menu6();
+  searchx=getx();
+  searchy=gety();
+ }
+ int sl1=(strlen(l1)/2)*3;
+ coordinate point6[2][3]={maxx/6,maxy/6,maxx/2,maxy/6,(maxx/6)*5,maxx/6,maxy/2,maxx/2,maxy/2,(maxx/6)*5};
+ if(loadcount<6)
+ {
+  outtextxy(point6[i][j].x-sl1,point6[i][j].y,l1);
+  if(j==3)
+  {
+   j=0,i++;
+  }
+  ++loadcount;
+ }
+ if(loadcount==6)
+ {
+  while(1)
+  {
+   option=getch();
+   menu6(i,j);
+   if(option==ARROW_UP)
+    --i;
+   else
+   {
+    if(option==ARROW_DOWN)
+     ++i;
+    else if(option==ARROW_RIGHT)
+     ++j;
+    else if(option==ARROW_LEFT)
+     --j;
+    else if(option==ENTER)
+     return ((i+1)+j*3);
+    else if(option==BACKSPACE)
+    {
+     outtextxy(searchx,searchy,"          ");
+     --k;
+     dsearch[k]='\0';
+    }
+    else
+    {
+     ++k;
+     dsearch[k]=char(option);
+     ++k;
+     dsearch[k]='\0';
+     loadcount=0;
+     if(dsearch[0]=='\0');
+     {
+      gotoxy(searchx,searchy);
+      k=0;
+     }
+    }
+   }
+    if(i==2)
+     --i;
+    if(i==-1)
+     ++i;
+    if(j==0)
+    {
+     cleardevice();loadcount=0;
+      return -1;
+    }
+    if(j==3)
+    {
+     cleardevice();
+     loadcount=0;
+     return 1;
+    }
+   }
+  }
+  return 0;
+ }
+
+void Dynamics(int size)
+{
+ load=0;
+ overloaded=0;
+ option=0;
+ menu6();
+ if(size==sizeof(worker))
+ {
+  worker search;
+  while(1)
+ {
+  overloaded=load%6;
+  ifile.seekg(0,ios::beg);
+  if(option<-1)
+  {
+   ofile.open("SEARCH.dat",ios::out|ios::binary|ios::app);ofile.seekp(0,ios::beg);
+   while(!ifile.eof())
+   {
+    ifile.read((char*)&search,size);
+    char dcheck[10];
+    strncpy(dcheck,search.name,strlen(dsearch));
+    if(strcmpi(dcheck,dsearch))
+     ofile.write((char*)&search,size);
+   }
+   ofile.close();
+   filei.open("SEARCH.dat",ios::in|ios::binary|ios::app);
+   filei.seekg(0,ios::beg);
+   if(filei.eof())
+   {
+    cleardevice();
+    setcolor(MAGENTA);
+    rectangle(0,0,maxx,maxy);
+    setfillstyle(1,BLACK);
+    floodfill(maxx/2,maxy/2,MAGENTA);
+    outtextxy(maxx/3,maxy/3,"NO ENTRIES");
+    delay(1000);
+   }
+  }
+  else
+  {
+   if(ifile.eof())
+   {
+    cleardevice();
+    setcolor(MAGENTA);
+    rectangle(0,0,maxx,maxy);
+    setfillstyle(1,BLACK);
+    floodfill(maxx/2,maxy/2,MAGENTA);
+    outtextxy(maxx/3,maxy/3,"NO ENTRIES");
+    delay(1000);
+   }
+   ofile.open("SEARCH.dat",ios::out|ios::binary);
+   ofile.seekp(0,ios::beg);
+   while(!ifile.eof())
+   {
+    ifile.read((char*)&search,size);
+    ofile.write((char*)&search,size);
+   }
+   ofile.close();
+   filei.open("SEARCH.dat",ios::in|ios::binary);
+   filei.seekg(0,ios::beg);
+  }
+  if(option==0||option==1)
+  {
+   load++;
+   filei.read((char*)&search,size);
+   search.switcher(l1);
+  }
+  else if(option==-1)
+  {
+   load--;
+   filei.seekg(-(size*12),ios::cur);
+   filei.read((char*)&search,size);
+   search.switcher(l1);
+   option=Dynamicsearch(l1);
+  }
+  else if(option>11)
+  {
+   if(load%6==0)
+   {
+    filei.seekg((-size)*(6-(option-1)),ios::cur);
+   }
+   else
+   {
+    overloaded=load%6;
+    int position=filei.tellg();
+    position/=size;
+    position-=(6-(option-11));
+    if(position>0)
+     filei.seekg((+size)&position,ios::cur);
+    else
+     filei.seekg((+size)*position,ios::end);
+    break;
+   }
+  }
+ }
+ }
+
+ else if(size==sizeof(project))
+ {
+  project search;
+  while(1)
+ {
+  overloaded=load%6;
+  ifile.seekg(0,ios::beg);
+  if(option<-1)
+   ofile.open("SEARCH.dat",ios::out|ios::binary|ios::app);
+   ofile.seekp(0,ios::beg);
+  while(!ifile.eof())
+  {
+   ifile.read((char*)&search,size);
+   char dcheck[10];
+   if(size==sizeof(worker))
+    strncpy(dcheck,search.name,strlen(dsearch));
+   else
+    strncpy(dcheck,search.name,strlen(dsearch));
+   if(strcmpi(dcheck,dsearch))
+    ofile.write((char*)&search,size);
+  }
+
+  ofile.close();
+  filei.open("SEARCH.dat",ios::in|ios::binary|ios::app);
+  filei.seekg(0,ios::beg);
+  if(filei.eof())
+   {
+    cleardevice();
+    setcolor(MAGENTA);
+    rectangle(0,0,maxx,maxy);
+    setfillstyle(1,BLACK);
+    floodfill(maxx/2,maxy/2,MAGENTA);
+    outtextxy(maxx/3,maxy/3,"NO ENTRIES");
+    delay(1000);
+   }
+ else
+ {
+  if(ifile.eof())
+   {
+    cleardevice();
+    setcolor(MAGENTA);
+    rectangle(0,0,maxx,maxy);
+    setfillstyle(1,BLACK);
+    floodfill(maxx/2,maxy/2,MAGENTA);
+    outtextxy(maxx/3,maxy/3,"NO ENTRIES");
+    delay(1000);
+   }
+   ofile.open("SEARCH.dat",ios::out|ios::binary);
+   ofile.seekp(0,ios::beg);
+   while(!ifile.eof())
+   {
+    ifile.read((char*)&search,size);
+    ofile.write((char*)&search,size);
+   }
+   ofile.close();
+   filei.open("SEARCH.dat",ios::in|ios::binary);
+   filei.seekg(0,ios::beg);
+  }
+  if(option==0||option==1)
+  {
+   load++;
+   filei.read((char*)&search,size);
+   search.switcher(l1);
+  }
+  else if(option==-1)
+  {
+   load--;
+   filei.seekg(-(size*12),ios::cur);
+   filei.read((char*)&search,size);
+   search.switcher(l1);
+   option=Dynamicsearch(l1);
+  }
+  else if(option>11)
+  {
+   if(load%6==0)
+   {
+    filei.seekg((-size)*(6-(option-1)),ios::cur);
+   }
+   else
+   {
+    overloaded=load%6;
+    int position=filei.tellg();
+    position/=size;
+    position-=(6-(option-11));
+    if(position>0)
+     filei.seekg((+size)&position,ios::cur);
+    else
+     filei.seekg((+size)*position,ios::end);
+    break;
+   }
+  }
+ }
+ }
+ else
+ {
+  product search;
+  while(1)
+ {
+  overloaded=load%6;
+  ifile.seekg(0,ios::beg);
+  if(option<-1)
+   ofile.open("SEARCH.dat",ios::out|ios::binary|ios::app);
+   ofile.seekp(0,ios::beg);
+  while(!ifile.eof())
+  {
+   ifile.read((char*)&search,size);
+   char dcheck[10];
+   if(size==sizeof(worker))
+    strncpy(dcheck,search.name,strlen(dsearch));
+   else
+    strncpy(dcheck,search.name,strlen(dsearch));
+   if(strcmpi(dcheck,dsearch))
+    ofile.write((char*)&search,size);
+  }
+
+  ofile.close();
+  filei.open("SEARCH.dat",ios::in|ios::binary|ios::app);
+  filei.seekg(0,ios::beg);
+  if(filei.eof())
+   {
+    cleardevice();
+    setcolor(MAGENTA);
+    rectangle(0,0,maxx,maxy);
+    setfillstyle(1,BLACK);
+    floodfill(maxx/2,maxy/2,MAGENTA);
+    outtextxy(maxx/3,maxy/3,"NO ENTRIES");
+    delay(1000);
+   }
+ else
+ {
+  if(ifile.eof())
+   {
+    cleardevice();
+    setcolor(MAGENTA);
+    rectangle(0,0,maxx,maxy);
+    setfillstyle(1,BLACK);
+    floodfill(maxx/2,maxy/2,MAGENTA);
+    outtextxy(maxx/3,maxy/3,"NO ENTRIES");
+    delay(1000);
+   }
+   ofile.open("SEARCH.dat",ios::out|ios::binary);
+   ofile.seekp(0,ios::beg);
+   while(!ifile.eof())
+   {
+    ifile.read((char*)&search,size);
+    ofile.write((char*)&search,size);
+   }
+   ofile.close();
+   filei.open("SEARCH.dat",ios::in|ios::binary);
+   filei.seekg(0,ios::beg);
+  }
+  if(option==0||option==1)
+  {
+   load++;
+   filei.read((char*)&search,size);
+   search.switcher(l1);
+  }
+  else if(option==-1)
+  {
+   load--;
+   filei.seekg(-(size*12),ios::cur);
+   filei.read((char*)&search,size);
+   search.switcher(l1);
+   option=Dynamicsearch(l1);
+  }
+  else if(option>11)
+  {
+   if(load%6==0)
+   {
+    filei.seekg((-size)*(6-(option-1)),ios::cur);
+   }
+   else
+   {
+    overloaded=load%6;
+    int position=filei.tellg();
+    position/=size;
+    position-=(6-(option-11));
+    if(position>0)
+     filei.seekg((+size)&position,ios::cur);
+    else
+     filei.seekg((+size)*position,ios::end);
+    break;
+   }
+  }
+ }
+}
+}
+
+
+void main()
+{
+ clrscr();
+ START:
+ option=menu4("PROJECTS","WORKERS","DEPOT","COMPANY LOG");
+ switch(option)
+ {
+  case 1:goto Projects;
+  case 2:goto Workers;
+  case 3:goto Depot;
+  case 4:goto Companylog;
+  case 5 :exit(0);
+ }
+
+ Projects:
+
+ option=menu4("NEW","UPCOMING","UNDERGOING","COMPLETED");
+ size=sizeof(project);
+ switch (option)
+ {
+  case 5:goto START;
+  case 1:
+	 project copied,search;
+	 copied.get();
+	 char name[20];
+	 ofile.open("TEMP.dat",ios::out|ios::binary);
+	 ofile.seekp(0,ios::beg);
+	 while(!ifile.eof())
+	 {
+	  ifile.read((char*)&search,size);
+	  strncpy(name,search.name,strlen(copied.name));
+	  char compare[20];
+	  strcpy(compare,name);
+	  option=insert(copied.name,name);
+	  option=insert(copied.name,name);
+	  if(option==0)
+	   ofile.write((char*)&search,size);
+	  if(option==1)
+	  {
+	   ofile.write((char*)&copied,size);
+	   ofile.write((char*)&search,size);
+	  }
+	  ofile.close();
+	  ifile.close();
+	  remove("PROJECTS.dat");
+	  rename("TEMP.DAT","PROJECTS.dat");
+	 }
+	 goto Projects;
+ default:
+	 project copy,copycheck;
+	 ifile.open("PROJECTS.dat",ios::in|ios::binary|ios::app);
+	 ifile.seekg(0,ios::beg);
+	 ofile.open("TEMP.dat",ios::out|ios::binary);
+	 while(!ifile.eof())
+	 {
+	  ifile.read((char*)&copy,size);
+	  if(copy.status==option-2)
+	  ofile.write((char*)&copy,size);
+	  else
+	   continue;
+	 }
+	 ifile.close();
+	 ofile.close();
+	 ifile.open("TEMP.dat",ios::in|ios::binary|ios::app);
+	 ifile.seekg(0,ios::beg);
+	 Dynamics(size);
+	 filei.read((char*)&copy,size);
+	 filei.close();
+	 ifile.close();
+	 ifile.open("PROJECTS.dat",ios::in|ios::binary|ios::app);
+	 ifile.seekg(0,ios::beg);
+	 while(!ifile.eof())
+	 {
+	  ifile.read((char*)&copycheck,size);
+	  if(strcmpi(copycheck.name,copy.name))
+	  {
+	   ifile.seekg(-size,ios::cur);
+	   break;
+	  }
+	 }
+	cleardevice();closegraph();
+	copy.put();
+	getch();
+	option=menu2("MODIFY","DELETE");
+	switch(option)
+	{
+	 case 1:copy.modify();
+		file.open("PROJECTS.dat",ios::app|ios::out|ios::binary);
+		file.seekg(0,ios::beg);
+		while(!ifile.eof())
+		{
+		 file.read((char*)&copycheck,size);
+		 if(copy.pcode==copycheck.pcode)
+		 {
+		  file.seekp(file.tellg()-size,ios::beg);
+		  continue;
+		 }
+		}
+		goto Projects;
+	 case 2:ofile.open("TEMP.dat",ios::out|ios::binary);
+		ifile.seekg(0,ios::beg);
+		while(!ifile.eof())
+		{
+		 ifile.read((char*)&copycheck,size);
+		 if(copy.pcode==copycheck.pcode)
+		  continue;
+		}
+		remove("PROJECTS.dat");
+		rename("TEMP.dat","PROJECTS.dat");
+		goto Projects;
+	 case 3:goto Projects;
+	}
+ }
+
+ Workers:
+
+ size=sizeof(worker);
+ option=menu2("NEW WORKER","SEARCH WORKER");
+
+ switch (option)
+ {
+  case 3:goto START;
+  case 1:
+	worker copied,search;
+	copied.get();
+	char name[20];
+	ifile.open("WORKERS.dat",ios::out|ios::app|ios::binary);
+	ifile.seekg(0,ios::beg);
+	ofile.open("TEMP.dat",ios::out|ios::binary);
+	while(!ifile.eof())
+	{
+	 ifile.read((char*)&search,size);
+	 strncpy(name,search.name,strlen(copied.name));
+	 char compare[20];
+	 strcpy(compare,name);
+	 option=insert(copied.name,name);
+	 option=insert(copied.name,name);
+	 if(option==0)
+	  ofile.write((char*)&search,size);
+	 if(option==1)
+	 {
+	  ofile.write((char*)&copied,size);
+	  ofile.write((char*)&search,size);
+	 }
+	 ofile.close();
+	 ifile.close();
+	 remove("WORKERS.dat");
+	 rename("TEMP.DAT","WORKERS.dat");
+	 goto Workers;
+	}
+ case 2:
+	worker copy,copycheck;
+	ifile.open("WORKERS.dat",ios::in|ios::binary|ios::app);
+	ifile.seekg(0,ios::beg);
+	Dynamics(size);
+	filei.read((char*)&copy,size);
+	filei.close();
+	ifile.close();
+	ifile.open("WORKERS.dat",ios::in|ios::binary|ios::app);
+	ifile.seekg(0,ios::beg);
+	while(!ifile.eof())
+	{
+	 ifile.read((char*)&copycheck,size);
+	 if(copycheck.getworker()==copy.getworker())
+	  {
+	   ifile.seekg(-size,ios::cur);
+	   break;
+	  }
+	}
+       cleardevice();closegraph();
+       copy.put();
+       getch();
+       option=menu2("MODIFY","DELETE");
+       switch(option)
+       {
+	case 1:copy.modify();
+	       file.open("WORKERS.dat",ios::app|ios::out|ios::binary);
+	       file.seekg(0,ios::beg);
+	       while(!ifile.eof())
+	       {
+		file.read((char*)&copycheck,size);
+		if(copy.getworker()==copycheck.getworker())
+		 {
+		 file.seekp(file.tellg()-size,ios::beg);
+		 continue;
+		 }
+	       }
+
+	       goto Workers;
+	case 2:ofile.open("TEMP.dat",ios::out|ios::binary);
+	       ifile.seekg(0,ios::beg);
+	       while(!ifile.eof())
+	       {
+		ifile.read((char*)&copycheck,size);
+		if(copy.getworker()==copycheck.getworker())
+		 continue;
+	       ofile.write((char*)&copycheck,size);
+	       }
+	      remove("WORKERS.dat");
+	      rename("TEMP.dat","WORKERS.dat");
+	      goto Workers;
+	case 3:goto Workers;
+       }
+}
+
+ Depot:
+
+ size=sizeof(product);
+ option=menu2("NEW PRODUCT","SEARCH PRODUCT");
+
+ switch (option)
+ {
+  case 3:goto START;
+  case 1:
+	product copied,search;
+	copied.get();
+	char name[20];
+	ifile.open("DEPOT.dat",ios::out|ios::app|ios::binary);
+	ifile.seekg(0,ios::beg);
+	ofile.open("TEMP.dat",ios::out|ios::binary);
+	while(!ifile.eof())
+	{
+	 ifile.read((char*)&search,size);
+	 strncpy(name,search.name,strlen(copied.name));
+	 char compare[20];
+	 strcpy(compare,name);
+	 option=insert(copied.name,name);
+	 if(option==0)
+	  ofile.write((char*)&search,size);
+	 if(option==1)
+	 {
+	  ofile.write((char*)&copied,size);
+	  ofile.write((char*)&search,size);
+	 }
+	 ofile.close();
+	 ifile.close();
+	 remove("DEPOT.dat");
+	 rename("TEMP.DAT","DEPOT.dat");
+	 goto Depot;
+	}
+ case 2:
+	product copy,copycheck;
+	ifile.open("DEPOT.dat",ios::in|ios::binary|ios::app);
+	ifile.seekg(0,ios::beg);
+	Dynamics(size);
+	filei.read((char*)&copy,size);
+	filei.close();
+	ifile.close();
+	ifile.open("DEPOT.dat",ios::in|ios::binary|ios::app);
+	ifile.seekg(0,ios::beg);
+	while(!ifile.eof())
+	{
+	 ifile.read((char*)&copycheck,size);
+	 if(copycheck.pno==copy.pno)
+	  {
+	   ifile.seekg(-size,ios::cur);
+	   break;
+	  }
+	}
+       cleardevice();closegraph();
+       copy.put();
+       getch();
+       option=menu2("MODIFY","DELETE");
+       switch(option)
+       {
+	case 1:copy.modify();
+	       file.open("DEPOT.dat",ios::app|ios::out|ios::binary);
+	       file.seekg(0,ios::beg);
+	       while(!ifile.eof())
+	       {
+		file.read((char*)&copycheck,size);
+		if(copy.pno==copycheck.pno)
+		 {
+		 file.seekp(file.tellg()-size,ios::beg);
+		 continue;
+		 }
+	       }
+
+	       goto Depot;
+	case 2:ofile.open("TEMP.dat",ios::out|ios::binary);
+	       ifile.seekg(0,ios::beg);
+	       while(!ifile.eof())
+	       {
+		ifile.read((char*)&copycheck,size);
+		if(copy.pno==copycheck.pno)
+		 continue;
+	       ofile.write((char*)&copycheck,size);
+	       }
+	      remove("DEPOT.dat");
+	      rename("TEMP.dat","DEPOT.dat");
+	      goto Depot;
+	case 3:goto Depot;
+       }
+}
+  Companylog:
+
+  file.open("Companylog.dat",ios::in|ios::out|ios::binary|ios::app);
+  file.seekg(0,ios::cur);
+  option=menu2("DISPLAY SEQUENTIALLY","CREATE NEW LOG");
+  switch(option)
+   {
+    case 3:goto Companylog;
+    case 1:
+	   clrscr();
+	   cout<<"NO:   Service Rendered\t\tCost    Date\n";
+	   for(int i=1;!file.eof();i++)
+	    {
+	     file.read((char*)&newlog,size);
+	     cout<<i;
+	     newlog.put();
+	     cout<<endl;
+	     if(i%20==0);
+	      {
+	       if(getch()==ARROW_UP)
+		file.seekg(-sizeof(clog)*20,ios::cur);
+	       if(getch()==ARROW_DOWN)
+		continue;
+	       if(getch()==ESC)
+		goto Companylog;
+	      }
+	    }
+	   goto Companylog;
+    case 2:
+	   clrscr();
+	   newlog.get();
+	   file.seekg(0,ios::end);
+	   file.write((char*)&newlog,size);
+	   delay(1000);
+	   goto Companylog;
+   }
+  getch();
+}
